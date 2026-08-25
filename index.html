@@ -71,8 +71,8 @@ header{text-align:center;padding:clamp(30px,5vw,52px) 20px 26px;max-width:900px;
   box-shadow:0 8px 24px -10px rgba(46,74,115,.25), inset 0 1px 0 #fff}
 .dot{width:8px;height:8px;border-radius:50%;background:#3ecf8e;box-shadow:0 0 0 0 rgba(62,207,142,.6);animation:pulse 1.8s infinite}
 @keyframes pulse{70%{box-shadow:0 0 0 8px rgba(62,207,142,0)}}
-h1{font-family:var(--mono);font-weight:700;font-size:clamp(2.9rem,8vw,5.1rem);line-height:1.0;letter-spacing:-.045em;
-  margin:20px 0 16px;text-wrap:balance}
+h1{font-family:var(--mono);font-weight:700;font-size:clamp(3.2rem,9vw,5.8rem);line-height:.98;letter-spacing:-.05em;
+  margin:22px 0 18px;text-wrap:balance}
 h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .lead{font-size:clamp(1.08rem,2.3vw,1.3rem);font-weight:500;color:var(--mut);max-width:600px;margin:0 auto;line-height:1.55}
 .lead b{color:var(--ink);font-weight:700}
@@ -93,7 +93,7 @@ main{max-width:1140px;margin:0 auto;padding:34px clamp(16px,5vw,40px) 40px;
 @media(max-width:900px){main{grid-template-columns:1fr}}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
 .board-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line)}
-.board-head h2{font-family:var(--mono);font-size:1.35rem;letter-spacing:-.02em}
+.board-head h2{font-family:var(--mono);font-size:1.5rem;font-weight:700;letter-spacing:-.02em}
 .board-head span{font-size:.88rem;font-weight:600;color:var(--mut)}
 
 .row{display:flex;align-items:center;gap:16px;padding:17px 24px;border-bottom:1px solid var(--line);
@@ -105,12 +105,12 @@ main{max-width:1140px;margin:0 auto;padding:34px clamp(16px,5vw,40px) 40px;
 .avatar{width:46px;height:46px;border-radius:14px;flex:0 0 auto;display:grid;place-items:center;
   color:#fff;font-family:var(--mono);font-weight:700;font-size:1.25rem;box-shadow:inset 0 2px 5px rgba(255,255,255,.45), inset 0 -3px 6px rgba(0,0,0,.12)}
 .meta{min-width:0;flex:1}
-.meta .t{display:flex;align-items:center;gap:7px;font-weight:700;font-size:1.06rem}
+.meta .t{display:flex;align-items:center;gap:7px;font-weight:700;font-size:1.14rem;letter-spacing:-.01em}
 .meta .t svg{opacity:.4;flex:0 0 auto}
 .meta .d{color:var(--mut);font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tag{font-size:.73rem;font-weight:700;color:var(--navy);background:#EEF3FB;padding:4px 10px;border-radius:8px;flex:0 0 auto}
 @media(max-width:560px){.tag{display:none}}
-.price{font-family:var(--mono);font-weight:700;font-size:1.2rem;flex:0 0 auto;min-width:64px;text-align:right}
+.price{font-family:var(--mono);font-weight:700;font-size:1.4rem;flex:0 0 auto;min-width:70px;text-align:right}
 .out{flex:0 0 auto;font-size:.84rem;font-weight:700;color:var(--purple);border:1.5px solid var(--line);
   padding:8px 14px;border-radius:11px;transition:all .15s}
 .out:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
@@ -171,6 +171,10 @@ footer b{font-family:var(--mono);color:var(--ink)}
 .spot:hover{border-color:var(--purple);transform:translateY(-1px)}
 .spot.sel{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 22px -8px var(--purple)}
 .spot.sel .p{color:rgba(255,255,255,.92)}
+.ownrow{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);border-radius:13px;padding:2px 14px}
+.ownrow:focus-within{border-color:var(--purple)}
+.ownrow span{font-family:var(--mono);font-weight:700;font-size:1.3rem;color:var(--navy)}
+.ownrow input{flex:1;border:none;padding:12px 0;font-family:var(--mono);font-weight:700;font-size:1.15rem;outline:none}
 .modal .btn{width:100%;justify-content:center;text-align:center;margin-top:8px;padding:16px;font-size:1.02rem}
 .modal .x{position:absolute;top:16px;right:20px;font-size:1.7rem;color:var(--mut);line-height:1}
 .modal-wrap{position:relative}
@@ -216,7 +220,7 @@ footer b{font-family:var(--mono);color:var(--ink)}
 <header>
   <span class="badge"><span class="dot"></span> topbid.space — the space for top bids</span>
   <h1>the <span>top spot</span><br>is for sale.</h1>
-  <p class="lead">Bid your brand onto the board. Every click on your spot lands on <b>your site</b>. One bid — and today's marketing is <b>handled</b>.</p>
+  <p class="lead">Bid your brand onto the board. Higher bid, higher rank. Every click lands on <b>your site</b>.</p>
   <div class="search">
     <input id="q" type="text" placeholder="Search a category or brand…" oninput="render()">
     <button class="btn" onclick="openModal()">Claim #1</button>
@@ -252,11 +256,11 @@ footer b{font-family:var(--mono);color:var(--ink)}
 
 <section class="how" id="about">
   <h2>how it works</h2>
-  <p class="sub">Higher bid = higher spot. That's the whole game.</p>
+  <p class="sub">Higher bid = higher spot. That's it.</p>
   <div class="steps">
-    <div class="step reveal"><div class="num">1</div><h3>Enter your link</h3><p>Your brand name + your website. Ten seconds.</p></div>
-    <div class="step reveal"><div class="num">2</div><h3>Pick your spot</h3><p>Tap the rank you want and see its price. Want #1? Beat the current #1's bid.</p></div>
-    <div class="step reveal"><div class="num">3</div><h3>Pay. You're live.</h3><p>Your spot is on the board instantly — everyone who clicks it lands on your site.</p></div>
+    <div class="step reveal"><div class="num">1</div><h3>Drop your link</h3><p>Brand + website. Ten seconds.</p></div>
+    <div class="step reveal"><div class="num">2</div><h3>Name your bid</h3><p>Pick a spot or type any amount. Bid more, rank higher.</p></div>
+    <div class="step reveal"><div class="num">3</div><h3>Pay. You're live.</h3><p>Instantly on the board. Every click goes to your site.</p></div>
   </div>
   <div class="cta"><button class="btn" onclick="openModal()">Get on the board — from $2</button></div>
 </section>
@@ -274,6 +278,10 @@ footer b{font-family:var(--mono);color:var(--ink)}
     <div class="field"><label>Category</label><select id="fCat"></select></div>
     <div class="field"><label>Pick your spot</label>
       <div class="spots" id="spotPick"></div>
+    </div>
+    <div class="field"><label>Or bid your own amount</label>
+      <div class="ownrow"><span>$</span><input id="fOwn" type="number" min="2" step="1" placeholder="type any amount" oninput="ownAmount(this.value)"></div>
+      <div class="hint" id="ownHint">$2 minimum. Higher bid = higher rank.</div>
     </div>
     <button class="btn" onclick="confirmBid()" id="payBtn">Pick a spot above</button>
   </div></div>
@@ -375,14 +383,27 @@ function renderSpotPick(preRank){
     '<button class="spot" data-rank="'+o.rank+'" data-price="'+o.price+'" onclick="pickSpot(this)">'+
     '<div class="r">#'+o.rank+'</div><div class="p">$'+o.price+'</div></button>').join('');
   selectedBid=0;
+  var own=document.getElementById('fOwn'); if(own) own.value='';
   document.getElementById('payBtn').textContent='Pick a spot above';
   if(preRank){const el=document.querySelector('.spot[data-rank="'+preRank+'"]');if(el)pickSpot(el);}
+}
+function rankForBid(amount){
+  const higher=spots.filter(s=>Number(s.bid)>=amount).length;
+  return higher+1;
 }
 function pickSpot(el){
   document.querySelectorAll('.spot').forEach(s=>s.classList.remove('sel'));
   el.classList.add('sel');
+  document.getElementById('fOwn').value='';
   selectedBid=Number(el.dataset.price);
   document.getElementById('payBtn').textContent='Pay $'+selectedBid+' → be #'+el.dataset.rank;
+}
+function ownAmount(v){
+  const amt=Math.floor(Number(v));
+  document.querySelectorAll('.spot').forEach(s=>s.classList.remove('sel'));
+  if(!(amt>=2)){selectedBid=0;document.getElementById('payBtn').textContent='Enter $2 or more';return;}
+  selectedBid=amt;
+  document.getElementById('payBtn').textContent='Pay $'+amt+' → be #'+rankForBid(amt);
 }
 function openModal(preRank){
   if(activeCat!=='All') document.getElementById('fCat').value=activeCat;
