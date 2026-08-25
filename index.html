@@ -154,6 +154,13 @@ main{max-width:1140px;margin:0 auto;padding:34px clamp(16px,5vw,40px) 40px;
   padding:8px 14px;border-radius:11px;transition:all .15s}
 .out:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
 .row.top{background:linear-gradient(90deg,rgba(110,150,200,.1),rgba(229,139,176,.1));position:relative;overflow:hidden}
+.row.avail{opacity:.9}
+.row.avail:hover{background:#F5F1FC}
+.avatar.av-empty{background:#fff;border:2px dashed var(--line);color:var(--mut);font-weight:600;box-shadow:none;font-size:1.4rem}
+.av-t{color:var(--mut)!important;font-weight:700}
+.av-p{color:var(--mut)!important}
+.av-btn{color:#fff!important;background:var(--grad);border-color:transparent!important}
+.av-btn:hover{filter:brightness(1.05);background:var(--grad)!important}
 .row.top:after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;
   background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);animation:shine 4.5s ease-in-out infinite}
 @keyframes shine{0%,60%{left:-60%}100%{left:130%}}
@@ -423,16 +430,27 @@ function avatarHTML(s,cls){
 function render(){
   const list=visible();
   document.getElementById('boardTitle').textContent = activeCat==='All'?'All leaderboard':activeCat+' leaderboard';
-  document.getElementById('boardCount').textContent = list.length+' spots';
-  document.getElementById('rows').innerHTML = list.length ? list.map((s,i)=>
-    '<div class="row rowin '+(i===0?'top':'')+'" style="animation-delay:'+(i*0.05)+'s" onclick="visit(\''+(s.link||'#').replace(/'/g,'')+'\')">'+
+  var minRows=activeCat==='All'?5:Math.max(list.length,3);
+  var rowsHTML=list.map(function(s,i){
+    return '<div class="row rowin '+(i===0?'top':'')+'" style="animation-delay:'+(i*0.05)+'s" onclick="visit(\''+(s.link||'#').replace(/'/g,'')+'\')">'+
       '<div class="rank">'+(i+1)+'</div>'+
       avatarHTML(s,'avatar')+
       '<div class="meta"><div class="t">'+s.name+' '+ext+'</div><div class="d">'+(s.description||'')+'</div></div>'+
       '<div class="tag">'+s.category+'</div>'+
       '<div class="price">$'+Number(s.bid).toFixed(0)+'</div>'+
       '<button class="out" onclick="event.stopPropagation();outbid('+i+')">outbid</button>'+
-    '</div>').join('') : '<div style="padding:48px 24px;text-align:center;color:var(--mut)">No spots yet — be the first. <a onclick="openModal()" style="color:var(--purple);font-weight:700;cursor:pointer">Claim #1 →</a></div>';
+    '</div>';
+  }).join('');
+  for(var r=list.length; r<minRows; r++){
+    rowsHTML+='<div class="row avail rowin" style="animation-delay:'+(r*0.05)+'s" onclick="openModal('+(r+1)+')">'+
+      '<div class="rank">'+(r+1)+'</div>'+
+      '<div class="avatar av-empty">+</div>'+
+      '<div class="meta"><div class="t av-t">Available</div><div class="d">your brand could be here</div></div>'+
+      '<div class="price av-p">$2</div>'+
+      '<button class="out av-btn">claim →</button>'+
+    '</div>';
+  }
+  document.getElementById('rows').innerHTML=rowsHTML;
 
   const total=spots.reduce((a,s)=>a+Number(s.bid),0);
   document.getElementById('raised').textContent='$'+total.toLocaleString();
