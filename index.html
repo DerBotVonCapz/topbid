@@ -458,11 +458,14 @@ function render(){
   const top=spots.length?Math.max.apply(null,spots.map(s=>Number(s.bid))):1;
   document.getElementById('claimPrice').textContent=(top+1);
 
+  const ranked=spots.slice().sort((a,b)=>b.bid-a.bid);
   const recent=spots.slice().sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0)).slice(0,5);
-  const src=recent.length?recent:visible().slice(0,5);
-  document.getElementById('feed').innerHTML = src.map(s=>
-    '<div class="ev">'+avatarHTML(s,'fa')+
-    '<div><b>'+s.name+'</b> claimed a spot</div><div class="amt">$'+Number(s.bid).toFixed(0)+'</div></div>').join('')
+  const src=recent.length?recent:ranked.slice(0,5);
+  document.getElementById('feed').innerHTML = src.map(function(s){
+    var rank=ranked.findIndex(function(x){return x.name===s.name && x.bid===s.bid;})+1;
+    return '<div class="ev">'+avatarHTML(s,'fa')+
+    '<div><b>'+s.name+'</b> claimed <b>#'+rank+'</b></div><div class="amt">$'+Number(s.bid).toFixed(0)+'</div></div>';
+  }).join('')
     || '<div class="ev" style="color:var(--mut)">No activity yet.</div>';
 }
 
