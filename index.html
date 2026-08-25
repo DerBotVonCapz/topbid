@@ -36,18 +36,23 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 @keyframes f3{50%{transform:translate(60px,-50px) scale(1.05)}}
 .bg:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0,transparent,var(--bg) 75%)}
 
-.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:-1;
+.orb{border-radius:50%;pointer-events:none;will-change:transform;
   background:radial-gradient(circle at 32% 28%, rgba(255,255,255,.95), rgba(255,255,255,.28) 42%, rgba(255,255,255,.04) 68%);
   border:1.5px solid rgba(255,255,255,.85);
   box-shadow:inset -20px -16px 44px rgba(138,111,192,.22), inset 10px 8px 26px rgba(255,255,255,.85), 0 28px 60px -24px rgba(46,74,115,.3);
   will-change:transform}
-.o1{width:150px;height:150px;top:16%;left:6%}
-.o2{width:80px;height:80px;top:56%;left:12%;box-shadow:inset -14px -10px 30px rgba(229,139,176,.28), inset 8px 6px 20px rgba(255,255,255,.85), 0 22px 46px -18px rgba(229,139,176,.32)}
-.o3{width:110px;height:110px;top:24%;right:7%;box-shadow:inset -16px -12px 34px rgba(110,150,200,.26), inset 8px 6px 22px rgba(255,255,255,.85), 0 24px 50px -20px rgba(110,150,200,.32)}
-.o4{width:60px;height:60px;top:66%;right:14%}
-.o5{width:44px;height:44px;top:38%;left:46%;box-shadow:inset -10px -8px 22px rgba(138,111,192,.24), inset 6px 5px 16px rgba(255,255,255,.85), 0 18px 38px -16px rgba(138,111,192,.3)}
-@media(prefers-reduced-motion:reduce){.blob{animation:none}}
-@media(max-width:900px){.o1,.o2,.o3,.o4,.o5{display:none}}
+.orbwrap{position:fixed;z-index:-1;pointer-events:none;will-change:transform}
+.o1{width:150px;height:150px;animation:drift1 24s ease-in-out infinite}
+.o2{width:80px;height:80px;animation:drift2 19s ease-in-out infinite;box-shadow:inset -14px -10px 30px rgba(229,139,176,.28), inset 8px 6px 20px rgba(255,255,255,.85), 0 22px 46px -18px rgba(229,139,176,.32)}
+.o3{width:110px;height:110px;animation:drift3 28s ease-in-out infinite;box-shadow:inset -16px -12px 34px rgba(110,150,200,.26), inset 8px 6px 22px rgba(255,255,255,.85), 0 24px 50px -20px rgba(110,150,200,.32)}
+.o4{width:60px;height:60px;animation:drift4 21s ease-in-out infinite}
+.o5{width:44px;height:44px;animation:drift1 32s ease-in-out infinite;box-shadow:inset -10px -8px 22px rgba(138,111,192,.24), inset 6px 5px 16px rgba(255,255,255,.85), 0 18px 38px -16px rgba(138,111,192,.3)}
+.w1{top:16%;left:6%}.w2{top:56%;left:12%}.w3{top:24%;right:7%}.w4{top:66%;right:14%}.w5{top:38%;left:46%}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(70px,45px) scale(1.07)}66%{transform:translate(35px,-55px) scale(.95)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}25%{transform:translate(-45px,35px)}50%{transform:translate(55px,65px)}75%{transform:translate(25px,-35px)}}
+@keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(-60px,50px) scale(1.09)}70%{transform:translate(-25px,-45px) scale(.93)}}
+@keyframes drift4{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,-60px)}}
+@media(max-width:900px){.orbwrap{display:none}}
 
 /* ---------- nav ---------- */
 nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:20px;
@@ -226,7 +231,7 @@ footer{text-align:center;padding:34px 20px;border-top:1px solid var(--line);disp
 </head>
 <body>
 <div class="bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
-<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="orb o4"></div><div class="orb o5"></div>
+<div class="orbwrap w1"><div class="orb o1"></div></div><div class="orbwrap w2"><div class="orb o2"></div></div><div class="orbwrap w3"><div class="orb o3"></div></div><div class="orbwrap w4"><div class="orb o4"></div></div><div class="orbwrap w5"><div class="orb o5"></div></div>
 
 <nav>
   <a href="#" class="brand">
@@ -524,20 +529,15 @@ if(new URLSearchParams(location.search).get('paid')==='1'){
   history.replaceState({},'',location.pathname);
 }
 
-// JS-driven floating orbs (continuous motion + mouse parallax)
+// mouse parallax on the orb wrappers (CSS handles the continuous float)
 (function(){
-  var orbs=[].slice.call(document.querySelectorAll('.orb'));
-  if(!orbs.length)return;
-  var conf=orbs.map(function(o,i){return {ph:i*1.9, sp:0.14+i*0.04, rx:30+i*10, ry:24+i*7, d:(i+1)*7};});
+  var wraps=[].slice.call(document.querySelectorAll('.orbwrap'));
+  if(!wraps.length)return;
   var tx=0,ty=0,cx=0,cy=0;
   window.addEventListener('mousemove',function(e){tx=(e.clientX/window.innerWidth-0.5);ty=(e.clientY/window.innerHeight-0.5);},{passive:true});
-  function loop(now){
-    var t=(now||0)/1000; cx+=(tx-cx)*0.05; cy+=(ty-cy)*0.05;
-    orbs.forEach(function(o,i){var c=conf[i];
-      var x=Math.sin(t*c.sp+c.ph)*c.rx + cx*c.d*3;
-      var y=Math.cos(t*c.sp*0.8+c.ph)*c.ry + cy*c.d*3;
-      o.style.transform='translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px)';
-    });
+  function loop(){
+    cx+=(tx-cx)*0.06;cy+=(ty-cy)*0.06;
+    wraps.forEach(function(w,i){var d=(i+1)*9;w.style.transform='translate('+(cx*d).toFixed(1)+'px,'+(cy*d).toFixed(1)+'px)';});
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
