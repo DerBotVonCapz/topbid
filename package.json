@@ -1,0 +1,10 @@
+{
+  "name": "topbid",
+  "version": "1.0.0",
+  "private": true,
+  "description": "topbid — the live pay-to-rank leaderboard",
+  "type": "module",
+  "dependencies": {
+    "stripe": "^17.5.0"
+  }
+}
