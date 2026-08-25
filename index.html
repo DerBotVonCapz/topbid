@@ -103,10 +103,17 @@ h1 span{background:linear-gradient(120deg,#6E96C8,#8A6FC0,#E58BB0,#8A6FC0,#6E96C
 @keyframes flow{to{background-position:220% center}}
 .lead{font-size:clamp(1.08rem,2.3vw,1.3rem);font-weight:500;color:var(--mut);max-width:600px;margin:0 auto;line-height:1.55}
 .lead b{color:var(--ink);font-weight:700}
-.search{display:flex;gap:10px;max-width:500px;margin:28px auto 0}
-.search input{flex:1;padding:15px 19px;border-radius:15px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.9);
-  font-family:inherit;font-size:1rem;font-weight:500;box-shadow:var(--shadow);outline:none}
-.search input:focus{border-color:var(--purple)}
+.bidbar{display:flex;gap:10px;max-width:560px;margin:30px auto 0;background:#fff;border:1px solid rgba(255,255,255,.9);
+  border-radius:18px;padding:8px;box-shadow:0 16px 44px -16px rgba(46,74,115,.3)}
+.bidbar input{flex:1;padding:14px 18px;border:none;background:transparent;font-family:inherit;font-size:1.05rem;font-weight:500;outline:none}
+.bidbar input::placeholder{color:var(--mut)}
+.bidbar .btn{white-space:nowrap;padding:14px 24px;font-size:1.02rem}
+.bidhint{text-align:center;margin-top:12px;color:var(--mut);font-size:.9rem;font-weight:600}
+.board-right{display:flex;align-items:center;gap:14px}
+.boardsearch{padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:#F8FAFE;font-family:inherit;
+  font-size:.9rem;font-weight:500;outline:none;width:130px;transition:width .2s,border-color .2s}
+.boardsearch:focus{border-color:var(--purple);width:170px}
+@media(max-width:520px){.boardsearch{display:none}}
 
 .chips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:780px;margin:22px auto 0;padding:0 16px}
 .chip{padding:8px 17px;border-radius:100px;border:1px solid var(--line);background:#fff;
@@ -265,11 +272,12 @@ footer{text-align:center;padding:34px 20px;border-top:1px solid var(--line);disp
 <header>
   <span class="badge"><span class="dot"></span> topbid.space — the space for top bids</span>
   <h1>the <span>top spot</span><br>is for sale.</h1>
-  <p class="lead">Bid your brand onto the board. Higher bid, higher rank. Every click lands on <b>your site</b>.</p>
-  <div class="search">
-    <input id="q" type="text" placeholder="Search a category or brand…" oninput="render()">
-    <button class="btn" onclick="openModal()">Claim #1</button>
+  <p class="lead">Enter your brand, bid on a rank. Higher bid = higher spot. Every click lands on <b>your site</b>.</p>
+  <div class="bidbar">
+    <input id="heroBrand" type="text" placeholder="Enter your brand name" onkeydown="if(event.key==='Enter')startBid()">
+    <button class="btn" onclick="startBid()">Bid on a rank →</button>
   </div>
+  <div class="bidhint">start at just $2 · takes 20 seconds</div>
 </header>
 
 <div class="chips" id="chips"></div>
@@ -278,7 +286,10 @@ footer{text-align:center;padding:34px 20px;border-top:1px solid var(--line);disp
   <section class="panel" id="board">
     <div class="board-head">
       <h2 id="boardTitle">All leaderboard</h2>
-      <span id="boardCount"></span>
+      <div class="board-right">
+        <input id="q" type="text" placeholder="Search…" oninput="render()" class="boardsearch">
+        <span id="boardCount"></span>
+      </div>
     </div>
     <div id="rows"></div>
   </section>
@@ -487,6 +498,13 @@ function outbid(i){
   const rank=all.findIndex(x=>x.name===s.name && x.bid===s.bid)+1;
   document.getElementById('fCat').value=s.category;
   openModal(rank);
+}
+function startBid(){
+  openModal(1);
+  var hb=document.getElementById('heroBrand');
+  var name=hb?hb.value.trim():'';
+  if(name){document.getElementById('fName').value=name;}
+  setTimeout(function(){var t=name?document.getElementById('fLink'):document.getElementById('fName');if(t)t.focus();},60);
 }
 function closeModal(){document.getElementById('overlay').classList.remove('on');}
 
