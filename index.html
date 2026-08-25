@@ -128,8 +128,13 @@ footer{text-align:center;padding:40px 20px;color:var(--mut);font-size:.88rem;bor
 .field input,.field select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);
   font-family:inherit;font-size:.98rem;outline:none;background:#fff}
 .field input:focus,.field select:focus{border-color:var(--purple)}
-.bidrow{display:flex;align-items:center;gap:8px}
-.bidrow span{font-family:var(--mono);font-weight:700;font-size:1.3rem;color:var(--navy)}
+.spots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.spot{border:1.5px solid var(--line);border-radius:13px;padding:11px 6px;text-align:center;transition:all .15s;background:#fff}
+.spot .r{font-family:var(--mono);font-weight:700;font-size:1.05rem}
+.spot .p{font-size:.82rem;color:var(--mut);font-family:var(--mono)}
+.spot:hover{border-color:var(--purple)}
+.spot.sel{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 8px 20px -8px var(--purple)}
+.spot.sel .p{color:rgba(255,255,255,.9)}
 .modal .btn{width:100%;justify-content:center;text-align:center;margin-top:8px;padding:15px}
 .modal .x{position:absolute;top:18px;right:22px;font-size:1.6rem;color:var(--mut);line-height:1}
 .modal-wrap{position:relative}
@@ -172,7 +177,7 @@ footer{text-align:center;padding:40px 20px;color:var(--mut);font-size:.88rem;bor
 <header>
   <span class="badge"><span class="dot"></span> live · anyone can be #1</span>
   <h1>be <span>#1</span> in your category.</h1>
-  <p class="lead">The pay-to-rank leaderboard. Buy a spot from $2, get outbid, bid back. Highest bid sits on top for everyone to click.</p>
+  <p class="lead">Buy a spot on the board from $2. Higher bid = higher rank. Every click on your spot goes straight to your site.</p>
   <div class="search">
     <input id="q" type="text" placeholder="Search a category or business…" oninput="render()">
     <button class="btn" onclick="openModal()">Claim #1</button>
@@ -208,13 +213,13 @@ footer{text-align:center;padding:40px 20px;color:var(--mut);font-size:.88rem;bor
 
 <section class="how" id="about">
   <h2>how it works</h2>
-  <p class="sub">Three steps to the top. No account, no waiting.</p>
+  <p class="sub">Higher bid = higher spot. That's the whole game.</p>
   <div class="steps">
-    <div class="step reveal"><div class="num">1</div><h3>Pick your spot</h3><p>Choose your category and see the current #1. Every spot links straight to your website — one click, real traffic.</p></div>
-    <div class="step reveal"><div class="num">2</div><h3>Place your bid</h3><p>Start at just $2. Bid higher than the spot above you and you jump the rank instantly after checkout.</p></div>
-    <div class="step reveal"><div class="num">3</div><h3>Hold #1 or get outbid</h3><p>Stay on top and soak up the clicks. Someone outbids you? Bid back. The board is live and always moving.</p></div>
+    <div class="step reveal"><div class="num">1</div><h3>Enter your link</h3><p>Your brand name + your website. Ten seconds.</p></div>
+    <div class="step reveal"><div class="num">2</div><h3>Pick your spot</h3><p>Tap the rank you want and see its price. Want #1? Beat the current #1's bid.</p></div>
+    <div class="step reveal"><div class="num">3</div><h3>Pay. You're live.</h3><p>Checkout takes seconds — your spot is on the board instantly. Everyone who clicks it lands on your site.</p></div>
   </div>
-  <div class="cta"><button class="btn" onclick="openModal()">Buy your spot — from $2</button></div>
+  <div class="cta"><button class="btn" onclick="openModal()">Get on the board — from $2</button></div>
 </section>
 
 <footer>topbid · the live pay-to-rank leaderboard · built for founders who want to be seen</footer>
@@ -222,17 +227,16 @@ footer{text-align:center;padding:40px 20px;color:var(--mut);font-size:.88rem;bor
 <div class="overlay" id="overlay">
   <div class="modal"><div class="modal-wrap">
     <button class="x" onclick="closeModal()">&times;</button>
-    <h3 id="mTitle">Claim your spot</h3>
-    <p class="msub" id="mSub">Bid your way onto the board. Starts at $2.</p>
-    <div class="field"><label>Business name</label><input id="fName" maxlength="24" placeholder="e.g. nadslab"></div>
+    <h3 id="mTitle">Get on the board</h3>
+    <p class="msub" id="mSub">Brand in. Spot picked. Paid. That's it.</p>
+    <div class="field"><label>Your brand</label><input id="fName" maxlength="24" placeholder="brand name"></div>
+    <div class="field"><label>Your link</label><input id="fLink" placeholder="https://yoursite.com"></div>
+    <div class="field"><label>One-liner <span style="font-weight:400;color:var(--mut)">(optional)</span></label><input id="fDesc" maxlength="40" placeholder="what you do"></div>
     <div class="field"><label>Category</label><select id="fCat"></select></div>
-    <div class="field"><label>Website link</label><input id="fLink" placeholder="https://yoursite.com"></div>
-    <div class="field"><label>Short description</label><input id="fDesc" maxlength="40" placeholder="what you do in a few words"></div>
-    <div class="field"><label>Your bid (USD)</label>
-      <div class="bidrow"><span>$</span><input id="fBid" type="number" min="2" step="1" value="2"></div>
-      <div class="hint" id="bidHint">Minimum $2. Bid higher to rank above others.</div>
+    <div class="field"><label>Pick your spot</label>
+      <div class="spots" id="spotPick"></div>
     </div>
-    <button class="btn" onclick="confirmBid()" id="payBtn">Continue to payment</button>
+    <button class="btn" onclick="confirmBid()" id="payBtn">Pick a spot above</button>
   </div></div>
 </div>
 
@@ -318,40 +322,54 @@ function render(){
 
 function visit(link){ if(link && link!=='#') window.open(link,'_blank','noopener'); }
 
-function openModal(){
-  modalTarget=null;
-  document.getElementById('mTitle').textContent='Claim your spot';
-  document.getElementById('mSub').textContent='Bid your way onto the board. Starts at $2.';
-  document.getElementById('fBid').value=2;
-  document.getElementById('fBid').min=2;
-  document.getElementById('bidHint').textContent='Minimum $2. Bid higher to rank above others.';
+let selectedBid=0;
+function spotOptions(){
+  const all=spots.slice().sort((a,b)=>b.bid-a.bid);
+  const opts=[];
+  const n=Math.min(all.length,8);
+  for(let i=0;i<n;i++) opts.push({rank:i+1,price:Number(all[i].bid)+1});
+  opts.push({rank:all.length+1,price:2,last:true});
+  return opts;
+}
+function renderSpotPick(preRank){
+  const opts=spotOptions();
+  document.getElementById('spotPick').innerHTML=opts.map(o=>
+    '<button class="spot" data-rank="'+o.rank+'" data-price="'+o.price+'" onclick="pickSpot(this)">'+
+    '<div class="r">#'+o.rank+'</div><div class="p">$'+o.price+'</div></button>').join('');
+  selectedBid=0;
+  document.getElementById('payBtn').textContent='Pick a spot above';
+  if(preRank){const el=document.querySelector('.spot[data-rank="'+preRank+'"]');if(el)pickSpot(el);}
+}
+function pickSpot(el){
+  document.querySelectorAll('.spot').forEach(s=>s.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedBid=Number(el.dataset.price);
+  document.getElementById('payBtn').textContent='Pay $'+selectedBid+' → be #'+el.dataset.rank;
+}
+function openModal(preRank){
   if(activeCat!=='All') document.getElementById('fCat').value=activeCat;
+  renderSpotPick(preRank||0);
   document.getElementById('overlay').classList.add('on');
 }
 function outbid(i){
-  const list=visible(); const s=list[i]; modalTarget=s;
-  const min=Number(s.bid)+1;
-  document.getElementById('mTitle').textContent='Outbid '+s.name;
-  document.getElementById('mSub').textContent="They're at $"+Number(s.bid).toFixed(0)+". Bid more to take their spot.";
-  document.getElementById('fName').value='';
+  const list=visible(); const s=list[i];
+  const all=spots.slice().sort((a,b)=>b.bid-a.bid);
+  const rank=all.findIndex(x=>x.name===s.name && x.bid===s.bid)+1;
   document.getElementById('fCat').value=s.category;
-  document.getElementById('fBid').value=min;
-  document.getElementById('fBid').min=min;
-  document.getElementById('bidHint').textContent='Must be at least $'+min+' to outrank '+s.name+'.';
-  document.getElementById('overlay').classList.add('on');
+  openModal(rank);
 }
 function closeModal(){document.getElementById('overlay').classList.remove('on');}
 
 async function confirmBid(){
   const name=document.getElementById('fName').value.trim();
-  const link=document.getElementById('fLink').value.trim();
+  let link=document.getElementById('fLink').value.trim();
   const desc=document.getElementById('fDesc').value.trim();
   const cat=document.getElementById('fCat').value;
-  const bid=parseFloat(document.getElementById('fBid').value);
-  const min=parseFloat(document.getElementById('fBid').min);
-  if(!name){return toast('Add your business name.');}
-  if(!link || !/^https?:\/\//.test(link)){return toast('Add a valid link (https://…).');}
-  if(!(bid>=min)){return toast('Bid must be at least $'+min+'.');}
+  const bid=selectedBid;
+  if(!name){return toast('Add your brand name.');}
+  if(link && !/^https?:\/\//.test(link)) link='https://'+link;
+  if(!link){return toast('Add your link.');}
+  if(!(bid>=2)){return toast('Pick your spot first.');}
 
   const btn=document.getElementById('payBtn'); btn.textContent='Redirecting to payment…'; btn.disabled=true;
   const payload={name:name,description:desc,link:link,category:cat,bid:bid};
