@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>topbid</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='5' y1='10' x2='44' y2='44' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%236E96C8'/%3E%3Cstop offset='.5' stop-color='%238A6FC0'/%3E%3Cstop offset='1' stop-color='%23E58BB0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='5' y='24' width='12' height='19' rx='4' fill='url(%23g)'/%3E%3Crect x='18.5' y='11' width='12' height='32' rx='4' fill='url(%23g)'/%3E%3Crect x='32' y='28' width='12' height='15' rx='4' fill='url(%23g)'/%3E%3C/svg%3E">
 <meta name="description" content="topbid.space — the space for top bids. Bid your brand onto the board. One bid, and today's marketing is handled.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,14 +38,18 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   background:radial-gradient(circle at 32% 28%, rgba(255,255,255,.95), rgba(255,255,255,.28) 42%, rgba(255,255,255,.04) 68%);
   border:1.5px solid rgba(255,255,255,.85);
   box-shadow:inset -20px -16px 44px rgba(138,111,192,.22), inset 10px 8px 26px rgba(255,255,255,.85), 0 28px 60px -24px rgba(46,74,115,.3);
-  animation:bob 12s ease-in-out infinite}
-.o1{width:150px;height:150px;top:16%;left:6%;animation-delay:0s}
-.o2{width:80px;height:80px;top:56%;left:12%;animation-delay:-4s;box-shadow:inset -14px -10px 30px rgba(229,139,176,.28), inset 8px 6px 20px rgba(255,255,255,.85), 0 22px 46px -18px rgba(229,139,176,.32)}
-.o3{width:110px;height:110px;top:24%;right:7%;animation-delay:-7s;box-shadow:inset -16px -12px 34px rgba(110,150,200,.26), inset 8px 6px 22px rgba(255,255,255,.85), 0 24px 50px -20px rgba(110,150,200,.32)}
-.o4{width:60px;height:60px;top:66%;right:14%;animation-delay:-2s}
-@keyframes bob{50%{transform:translateY(-26px)}}
+  will-change:transform}
+.o1{width:150px;height:150px;top:16%;left:6%;animation:drift1 26s ease-in-out infinite}
+.o2{width:80px;height:80px;top:56%;left:12%;animation:drift2 20s ease-in-out infinite;box-shadow:inset -14px -10px 30px rgba(229,139,176,.28), inset 8px 6px 20px rgba(255,255,255,.85), 0 22px 46px -18px rgba(229,139,176,.32)}
+.o3{width:110px;height:110px;top:24%;right:7%;animation:drift3 30s ease-in-out infinite;box-shadow:inset -16px -12px 34px rgba(110,150,200,.26), inset 8px 6px 22px rgba(255,255,255,.85), 0 24px 50px -20px rgba(110,150,200,.32)}
+.o4{width:60px;height:60px;top:66%;right:14%;animation:drift4 22s ease-in-out infinite}
+.o5{width:44px;height:44px;top:38%;left:46%;animation:drift2 34s ease-in-out infinite;box-shadow:inset -10px -8px 22px rgba(138,111,192,.24), inset 6px 5px 16px rgba(255,255,255,.85), 0 18px 38px -16px rgba(138,111,192,.3)}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,40px) scale(1.06)}66%{transform:translate(30px,-50px) scale(.96)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}25%{transform:translate(-40px,30px)}50%{transform:translate(50px,60px)}75%{transform:translate(20px,-30px)}}
+@keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(-55px,45px) scale(1.08)}70%{transform:translate(-20px,-40px) scale(.94)}}
+@keyframes drift4{0%,100%{transform:translate(0,0)}50%{transform:translate(-45px,-55px)}}
 @media(prefers-reduced-motion:reduce){.blob,.orb{animation:none}}
-@media(max-width:900px){.o1,.o2,.o3,.o4{display:none}}
+@media(max-width:900px){.o1,.o2,.o3,.o4,.o5{display:none}}
 
 /* ---------- nav ---------- */
 nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:20px;
@@ -121,7 +126,9 @@ main{max-width:1140px;margin:0 auto;padding:34px clamp(16px,5vw,40px) 40px;
 .row:hover{background:#F8FAFE}
 .rank{font-family:var(--mono);font-weight:700;font-size:1.1rem;color:var(--mut);width:34px;text-align:center;flex:0 0 auto}
 .row.top .rank{color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
-.avatar{width:46px;height:46px;border-radius:14px;flex:0 0 auto;display:grid;place-items:center;
+.avatar img{width:60%;height:60%;object-fit:contain;border-radius:6px;display:block;background:#fff;padding:2px}
+.feed .ev .fa img{width:62%;height:62%;object-fit:contain;border-radius:5px;display:block;background:#fff;padding:1px}
+.avatar{width:46px;height:46px;border-radius:14px;flex:0 0 auto;display:grid;place-items:center;overflow:hidden;
   color:#fff;font-family:var(--mono);font-weight:700;font-size:1.25rem;box-shadow:inset 0 2px 5px rgba(255,255,255,.45), inset 0 -3px 6px rgba(0,0,0,.12)}
 .meta{min-width:0;flex:1}
 .meta .t{display:flex;align-items:center;gap:7px;font-weight:700;font-size:1.14rem;letter-spacing:-.01em}
@@ -217,7 +224,7 @@ footer{text-align:center;padding:34px 20px;border-top:1px solid var(--line);disp
 </head>
 <body>
 <div class="bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
-<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="orb o4"></div>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="orb o4"></div><div class="orb o5"></div>
 
 <nav>
   <a href="#" class="brand">
@@ -375,6 +382,15 @@ function visible(){
 function colorFor(s){return s.color||COLORS[Math.abs(hash(s.name))%COLORS.length];}
 function hash(str){let h=0;for(let i=0;i<str.length;i++)h=(h<<5)-h+str.charCodeAt(i)|0;return h;}
 const ext='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+function domainOf(link){var m=(link||'').match(/^https?:\/\/([^\/?#]+)/i);return m?m[1]:'';}
+function avatarHTML(s,cls){
+  var color=colorFor(s), letter=(s.name[0]||'?').toUpperCase(), dom=domainOf(s.link);
+  if(dom){
+    var fav='https://www.google.com/s2/favicons?domain='+dom+'&sz=64';
+    return '<div class="'+cls+'" style="background:'+color+'"><img src="'+fav+'" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode(\''+letter+'\'))"></div>';
+  }
+  return '<div class="'+cls+'" style="background:'+color+'">'+letter+'</div>';
+}
 
 function render(){
   const list=visible();
@@ -383,7 +399,7 @@ function render(){
   document.getElementById('rows').innerHTML = list.length ? list.map((s,i)=>
     '<div class="row rowin '+(i===0?'top':'')+'" style="animation-delay:'+(i*0.05)+'s" onclick="visit(\''+(s.link||'#').replace(/'/g,'')+'\')">'+
       '<div class="rank">'+(i+1)+'</div>'+
-      '<div class="avatar" style="background:'+colorFor(s)+'">'+s.name[0].toUpperCase()+'</div>'+
+      avatarHTML(s,'avatar')+
       '<div class="meta"><div class="t">'+s.name+' '+ext+'</div><div class="d">'+(s.description||'')+'</div></div>'+
       '<div class="tag">'+s.category+'</div>'+
       '<div class="price">$'+Number(s.bid).toFixed(0)+'</div>'+
@@ -399,7 +415,7 @@ function render(){
   const recent=spots.slice().sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0)).slice(0,5);
   const src=recent.length?recent:visible().slice(0,5);
   document.getElementById('feed').innerHTML = src.map(s=>
-    '<div class="ev"><div class="fa" style="background:'+colorFor(s)+'">'+s.name[0].toUpperCase()+'</div>'+
+    '<div class="ev">'+avatarHTML(s,'fa')+
     '<div><b>'+s.name+'</b> claimed a spot</div><div class="amt">$'+Number(s.bid).toFixed(0)+'</div></div>').join('')
     || '<div class="ev" style="color:var(--mut)">No activity yet.</div>';
 }
@@ -495,6 +511,21 @@ if(new URLSearchParams(location.search).get('paid')==='1'){
   toast("🎉 You're on the board! Refreshing the leaderboard…");
   history.replaceState({},'',location.pathname);
 }
+
+// gentle mouse parallax on the floating orbs
+(function(){
+  var orbs=[].slice.call(document.querySelectorAll('.orb'));
+  if(!orbs.length||window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  var tx=0,ty=0,cx=0,cy=0;
+  window.addEventListener('mousemove',function(e){
+    tx=(e.clientX/window.innerWidth-0.5);ty=(e.clientY/window.innerHeight-0.5);
+  },{passive:true});
+  (function loop(){
+    cx+=(tx-cx)*0.06;cy+=(ty-cy)*0.06;
+    orbs.forEach(function(o,i){var d=(i+1)*10;o.style.marginLeft=(cx*d)+'px';o.style.marginTop=(cy*d)+'px';});
+    requestAnimationFrame(loop);
+  })();
+})();
 
 initChips();
 loadSpots();
